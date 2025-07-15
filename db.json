@@ -4,8 +4,45 @@
       "id": "d68b",
       "nome": "Breno Macena Pereira de Souza",
       "renda": 100000,
-      "orcamentoDiario": 3333.3333333333335
+      "orcamentoDiario": 13534.003333333334
     }
   ],
-  "transacoes": []
+  "transacoes": [
+    {
+      "id": "6751",
+      "nome": "Livro",
+      "valor": 100,
+      "tipo": "despesa",
+      "categoria": "Estudos",
+      "data": "2025-07-15",
+      "usuarioId": "d68b"
+    },
+    {
+      "id": "3749",
+      "nome": "Pix",
+      "valor": 0.67,
+      "tipo": "receita",
+      "categoria": "Pagamentos",
+      "data": "2025-07-15",
+      "usuarioId": "d68b"
+    },
+    {
+      "id": "343c",
+      "nome": "Nintendo Switch 2",
+      "valor": 4700,
+      "tipo": "despesa",
+      "categoria": "Entretenimento",
+      "data": "2025-07-15",
+      "usuarioId": "d68b"
+    },
+    {
+      "id": "0bc4",
+      "nome": "Salário",
+      "valor": 15000,
+      "tipo": "receita",
+      "categoria": "Pagamentos",
+      "data": "2025-07-15",
+      "usuarioId": "d68b"
+    }
+  ]
 }

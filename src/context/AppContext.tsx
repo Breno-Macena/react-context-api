@@ -7,7 +7,7 @@ interface AppContextType {
   usuario?: IUsuario | null
   criaUsuario?: (usuario: Omit<IUsuario, 'id' | 'orcamentoDiario'>) => Promise<void>
   transacoes?: ITransacao[]
-  criaTransacao?: (transacao: Omit<ITransacao, 'id'>) => Promise<void>
+  criaTransacao?: (transacao: Omit<ITransacao, 'id' | 'usuarioId'>) => Promise<void>
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined)
@@ -46,10 +46,14 @@ const AppProvider = ({ children }: AppContextProps) => {
     }
   }
 
-  const criaTransacao = async (transacao: Omit<ITransacao, 'id'>) => {
+  const criaTransacao = async (transacao: Omit<ITransacao, 'id' | 'usuarioId'>) => {
     try {
-      const novaTransacao = await criarTransacao(transacao)
+      if (!usuario) {
+        throw new Error("não podemos criar transações sem um usuário")
+      }
+      const { transacao: novaTransacao, novoOrcamentoDiario } = await criarTransacao(transacao, usuario)
       setTransacoes((prevState) => [...prevState, novaTransacao])
+      setUsuario((prevState) => prevState ? { ...prevState, orcamentoDiario: novoOrcamentoDiario } : null)
     } catch (error) {
       console.error('Erro ao criar transação:', error)
     }

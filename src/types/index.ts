@@ -7,6 +7,7 @@ export interface IUsuario {
 
 export interface ITransacao {
   id: string
+  usuarioId: string
   nome: string
   valor: number
   tipo: "receita" | "despesa"

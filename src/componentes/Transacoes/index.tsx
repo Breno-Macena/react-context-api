@@ -41,8 +41,8 @@ export const ListaMovimentacoes = styled.ul`
 
 const Transacoes = () => {
   const modalRef = useRef<ModalHandle>(null);
-  
-  const transacaoVazia: Omit<ITransacao, 'id'> = {
+
+  const transacaoVazia: Omit<ITransacao, 'id' | 'usuarioId'> = {
     nome: "",
     valor: 0,
     tipo: "receita",
@@ -52,7 +52,7 @@ const Transacoes = () => {
 
   const { transacoes, criaTransacao } = useAppContext();
 
-  const [novaTransacao, setNovaTransacao] = useState<Omit<ITransacao, 'id'>>(transacaoVazia)
+  const [novaTransacao, setNovaTransacao] = useState<Omit<ITransacao, 'id' | 'usuarioId'>>(transacaoVazia)
 
   const aoMudar = (campo: keyof typeof novaTransacao, valor: string | number) => {
     setNovaTransacao((prevState) => ({
@@ -119,7 +119,7 @@ const Transacoes = () => {
                 placeholder="10"
                 value={novaTransacao.valor}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  aoMudar("valor", Number(e.target.value))
+                  aoMudar("valor", parseFloat(e.target.value))
                 }
               />
             </Fieldset>
