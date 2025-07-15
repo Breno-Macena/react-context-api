@@ -4,6 +4,11 @@
       "id": "b093",
       "nome": "Breno Macena Pereira de Souza",
       "renda": 10000
+    },
+    {
+      "id": "c949",
+      "nome": "Jão Zé",
+      "renda": 1000000
     }
   ],
   "transacoes": []
