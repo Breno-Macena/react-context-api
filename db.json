@@ -1,14 +1,10 @@
 {
   "usuarios": [
     {
-      "id": "b093",
+      "id": "d68b",
       "nome": "Breno Macena Pereira de Souza",
-      "renda": 10000
-    },
-    {
-      "id": "c949",
-      "nome": "Jão Zé",
-      "renda": 1000000
+      "renda": 100000,
+      "orcamentoDiario": 3333.3333333333335
     }
   ],
   "transacoes": []

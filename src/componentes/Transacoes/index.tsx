@@ -10,6 +10,8 @@ import Fieldset from "../Fieldset";
 import Label from "../Label";
 import CampoTexto from "../CampoTexto";
 import { SelectGroup, SelectOption } from "../Select";
+import { useAppContext } from "../../context/AppContext";
+import { ITransacao } from "../../types";
 
 export const Container = styled(CartaoCorpo)`
   padding: var(--padding-l) var(--padding-m);
@@ -37,50 +39,45 @@ export const ListaMovimentacoes = styled.ul`
   -ms-overflow-style: none;
 `;
 
-const transacoes = [
-  {
-    id: 1,
-    nome: "Compra de supermercado",
-    valor: 150,
-    tipo: "despesa",
-    categoria: "Alimentação",
-    data: "2024-10-10",
-  },
-  {
-    id: 2,
-    nome: "Pagamento de aluguel",
-    valor: 1000,
-    tipo: "despesa",
-    categoria: "Moradia",
-    data: "2024-10-05",
-  },
-  {
-    id: 3,
-    nome: "Recebimento de salário",
-    valor: 3000,
-    tipo: "receita",
-    categoria: "Renda",
-    data: "2024-10-01",
-  },
-];
-
 const Transacoes = () => {
-  const modelRef = useRef<ModalHandle>(null);
-
-  const [novaTransacao, setNovaTransacao] = useState({
+  const modalRef = useRef<ModalHandle>(null);
+  
+  const transacaoVazia: Omit<ITransacao, 'id'> = {
     nome: "",
     valor: 0,
-    tipo: "",
+    tipo: "receita",
     categoria: "",
     data: "",
-  });
+  };
+
+  const { transacoes, criaTransacao } = useAppContext();
+
+  const [novaTransacao, setNovaTransacao] = useState<Omit<ITransacao, 'id'>>(transacaoVazia)
+
+  const aoMudar = (campo: keyof typeof novaTransacao, valor: string | number) => {
+    setNovaTransacao((prevState) => ({
+      ...prevState,
+      [campo]: valor,
+    }))
+  }
+
+  const aoCriarTransacao = async () => {
+    try {
+      if (criaTransacao) {
+        await criaTransacao(novaTransacao)
+      }
+      setNovaTransacao(transacaoVazia);
+    } catch (error) {
+      console.error("Erro ao criar transação:", error);
+    }
+  }
 
   return (
     <Cartao>
       <CartaoCabecalho>Movimentação financeira</CartaoCabecalho>
       <Container>
         <ListaMovimentacoes>
-          {transacoes.map((transacao) => (
+          {transacoes?.map((transacao) => (
             <Transacao
               key={transacao.id}
               tipo={transacao.tipo}
@@ -90,16 +87,16 @@ const Transacoes = () => {
             />
           ))}
         </ListaMovimentacoes>
-        <Botao $variante="neutro" onClick={() => modelRef.current?.open()}>
+        <Botao $variante="neutro" onClick={() => modalRef.current?.open()}>
           <MoneyIcon />
           Adicionar transação
         </Botao>
         <Modal
-          ref={modelRef}
+          innerRef={modalRef}
           cliqueForaModal
           titulo="Adicionar transação"
           icon={<MoneyIcon />}
-          aoClicar={() => alert("Modal aberta!")}
+          aoClicar={aoCriarTransacao}
         >
           <Form>
             <Fieldset>
@@ -110,7 +107,7 @@ const Transacoes = () => {
                 placeholder="Ex: Compra na padaria"
                 value={novaTransacao.nome}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setNovaTransacao({ ...novaTransacao, nome: e.target.value })
+                  aoMudar("nome", e.target.value)
                 }
               />
             </Fieldset>
@@ -122,10 +119,7 @@ const Transacoes = () => {
                 placeholder="10"
                 value={novaTransacao.valor}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setNovaTransacao({
-                    ...novaTransacao,
-                    valor: parseFloat(e.target.value),
-                  })
+                  aoMudar("valor", Number(e.target.value))
                 }
               />
             </Fieldset>
@@ -135,10 +129,7 @@ const Transacoes = () => {
                 id="tipo"
                 value={novaTransacao.tipo}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                  setNovaTransacao({
-                    ...novaTransacao,
-                    tipo: e.target.value,
-                  })
+                  aoMudar("tipo", e.target.value as "receita" | "despesa")
                 }
               >
                 <SelectOption value="">Selecione o tipo</SelectOption>
@@ -154,10 +145,7 @@ const Transacoes = () => {
                 placeholder="dd/mm/aaaa"
                 value={novaTransacao.data}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setNovaTransacao({
-                    ...novaTransacao,
-                    data: e.target.value,
-                  })
+                  aoMudar("data", e.target.value)
                 }
               />
             </Fieldset>
@@ -169,10 +157,7 @@ const Transacoes = () => {
                 placeholder="Alimentação"
                 value={novaTransacao.categoria}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setNovaTransacao({
-                    ...novaTransacao,
-                    categoria: e.target.value,
-                  })
+                  aoMudar("categoria", e.target.value)
                 }
               />
             </Fieldset>

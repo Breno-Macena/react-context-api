@@ -7,28 +7,28 @@ import {
 } from "./style";
 import Botao from "../Botao";
 
+export interface ModalHandle {
+  open: () => void
+  close: () => void
+}
+
 interface ModalProps {
   icon: React.ReactNode
   titulo: string
   children: React.ReactNode
   aoClicar: () => void
   cliqueForaModal?: boolean
-  ref?: React.RefObject<ModalHandle>
+  innerRef?: React.RefObject<ModalHandle>
 }
 
-export interface ModalHandle {
-  open: () => void
-  close: () => void
-}
-
-const Modal = ({ icon, titulo, children, aoClicar, cliqueForaModal = true, ref }: ModalProps) => {
+const Modal = ({ icon, titulo, children, aoClicar, cliqueForaModal = true, innerRef }: ModalProps) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
 
     const fechaModal = () => {
       dialogRef.current?.close();
     }
 
-    useImperativeHandle(ref, () => ({
+    useImperativeHandle(innerRef, () => ({
       open: () => dialogRef.current?.showModal(),
       close: fechaModal,
     }))

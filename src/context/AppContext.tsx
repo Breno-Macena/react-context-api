@@ -5,7 +5,7 @@ import { obterUsuarios, criarUsuario, obterTransacoes, criarTransacao } from '..
 
 interface AppContextType {
   usuario?: IUsuario | null
-  criaUsuario?: (usuario: Omit<IUsuario, 'id'>) => Promise<void>
+  criaUsuario?: (usuario: Omit<IUsuario, 'id' | 'orcamentoDiario'>) => Promise<void>
   transacoes?: ITransacao[]
   criaTransacao?: (transacao: Omit<ITransacao, 'id'>) => Promise<void>
 }
@@ -37,7 +37,7 @@ const AppProvider = ({ children }: AppContextProps) => {
     carregaDadosUsuario()
   }, [])
 
-  const criaUsuario = async (usuario: Omit<IUsuario, 'id'>) => {
+  const criaUsuario = async (usuario: Omit<IUsuario, 'id' | 'orcamentoDiario'>) => {
     try {
       const novoUsuario = await criarUsuario(usuario)
       setUsuario(novoUsuario)
